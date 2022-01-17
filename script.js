@@ -5,7 +5,6 @@ const items = document.querySelector('.items');
 const cart = document.querySelector('.cart__items');
 const esvaziaCarrinho = document.querySelector('.empty-cart');
 const priceCar = document.querySelector('.total-price');
-const emptyCar = 0;
 let preco = 0;
 // cria a imagem do produto vindo da api
 function createProductImageElement(imageSource) {
@@ -22,12 +21,13 @@ function createCustomElement(element, className, innerText) {
   return e;
 }
 function precoCarrinho() {
+  preco = 0;
   const arrayProducts = Array.from(document.querySelectorAll('.cart__item'));
   arrayProducts.forEach((produto) => {
     const product = produto.innerText; // transforma o li em texto
     const sub = product.indexOf('$'); // pega o index do $
     const produtos = product.substring(sub + 1); // retira tudo a partir do indice da substring. O +1 é para retirar o $ tambem 
-    preco += emptyCar + Number(produtos);
+    preco += Number(produtos);
     priceCar.innerHTML = `<p>$${preco}</p>`;
   });
 }
@@ -35,6 +35,7 @@ function precoCarrinho() {
 // quando clina em algum elemento da lista, ele exclui
 function cartItemClickListener(event) {
   event.target.remove(); // foi utilizado o remove porque as '' deixaria um lugar vazio e poderia gerar alguma quebra. Imaginando como se fosse um array, com o remove, um array de length 5 passaria para 4. Com as '', permaneceria 5, mas com um lugar vazio no meio.
+  precoCarrinho();
 }
 // cart que é criado no espaco do carrinho, quando o elemento for adicionado ele passará por aqui para ser criado cada item
 function createCartItemElement({ sku, name, salePrice }) {
@@ -70,13 +71,15 @@ function createProductItemElement({ sku, name, image }) {
   return section;
 }
 // esvazia o carrinho
-esvaziaCarrinho.addEventListener('click', () => {
-  cart.innerText = '';
-  const esvazia = '';
-  priceCar.innerText = 0;
-  saveCartItems(esvazia);
-});
-
+const emptyCart = () => {
+  esvaziaCarrinho.addEventListener('click', () => {
+    cart.innerText = '';
+    const esvazia = '';
+    priceCar.innerText = 0;
+    saveCartItems(esvazia);
+  });
+};
+emptyCart();
 /* function getSkuFromProductItem(item) {
   saveCartItems(cart.innerText);
   return item.querySelector('span.item__sku').innerText;
@@ -95,4 +98,4 @@ const getProducts = () => {
 };
 getProducts();
 
-window.onload = () => {};
+window.onload = () => { };
