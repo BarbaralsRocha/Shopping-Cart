@@ -28,13 +28,16 @@ function precoCarrinho() {
     const sub = product.indexOf('$'); // pega o index do $
     const produtos = product.substring(sub + 1); // retira tudo a partir do indice da substring. O +1 é para retirar o $ tambem 
     preco += Number(produtos);
-    priceCar.innerHTML = `<p>$${preco}</p>`;
+    priceCar.innerHTML = `<p>${preco}</p>`;
   });
 }
 
 // quando clina em algum elemento da lista, ele exclui
 function cartItemClickListener(event) {
   event.target.remove(); // foi utilizado o remove porque as '' deixaria um lugar vazio e poderia gerar alguma quebra. Imaginando como se fosse um array, com o remove, um array de length 5 passaria para 4. Com as '', permaneceria 5, mas com um lugar vazio no meio.
+  if (document.querySelectorAll('.cart__item').length === 0) {
+    preco = 0;
+  }
   precoCarrinho();
 }
 // cart que é criado no espaco do carrinho, quando o elemento for adicionado ele passará por aqui para ser criado cada item
