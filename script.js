@@ -5,6 +5,7 @@ const items = document.querySelector('.items');
 const cart = document.querySelector('.cart__items');
 const esvaziaCarrinho = document.querySelector('.empty-cart');
 const priceCar = document.querySelector('.total-price');
+const loading = document.querySelector('.loading');
 let preco = 0;
 // cria a imagem do produto vindo da api
 function createProductImageElement(imageSource) {
@@ -35,10 +36,12 @@ function precoCarrinho() {
 // quando clina em algum elemento da lista, ele exclui
 function cartItemClickListener(event) {
   event.target.remove(); // foi utilizado o remove porque as '' deixaria um lugar vazio e poderia gerar alguma quebra. Imaginando como se fosse um array, com o remove, um array de length 5 passaria para 4. Com as '', permaneceria 5, mas com um lugar vazio no meio.
-  if (document.querySelectorAll('.cart__item').length === 0) {
+  if (document.querySelector('.cart__items').children.length === 0) {
     preco = 0;
+    priceCar.innerHTML = `<p>${preco}</p>`;
   }
   precoCarrinho();
+  saveCartItems(cart.innerHTML);
 }
 // cart que é criado no espaco do carrinho, quando o elemento for adicionado ele passará por aqui para ser criado cada item
 function createCartItemElement({ sku, name, salePrice }) {
@@ -58,7 +61,7 @@ const adicionaId = async (ids) => {
   const itemSelected = createCartItemElement({ sku, name, salePrice }); // cria o elemento li na função acima 
   cart.appendChild(itemSelected); // insere o elemento no carrinho
   precoCarrinho();
-  saveCartItems(cart.innerText);
+  saveCartItems(cart.innerHTML);
 };
 
 // cria cada produto vindo da api 
@@ -91,14 +94,26 @@ emptyCart();
 // passa os dados da api para serem criados no createProductItemElement
 const promiseProduct = fetchProducts('computador');
 const getProducts = () => {
+  loading.innerText = 'Carregando...';
   promiseProduct.then((response) => response.results.map((product) => {
     const sku = product.id;
     const name = product.title;
     const image = product.thumbnail;
     items.appendChild(createProductItemElement({ sku, name, image }));
+    loading.remove();
     return items;
   }));
 };
 getProducts();
+const getSaveItems = () => {
+  cart.innerHTML = getSavedCartItems();
+  const itemsSaved = Array.from(cart.children);
+  itemsSaved.forEach((item) => {
+    item.addEventListener('click', cartItemClickListener);
+  });
+  precoCarrinho();
+};
 
-window.onload = () => { };
+window.onload = () => {
+  getSaveItems();
+};
