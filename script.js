@@ -1,7 +1,7 @@
 const items = document.querySelector('.items');
-const cartItens = document.querySelectorAll('.cart__item');
-const adicionaCarrinho = document.querySelector('.item__add');
-const productID = document.querySelector('.item__sku');
+// const cartItens = document.querySelectorAll('.cart__item');
+// const adicionaCarrinho = document.querySelector('.item__add');
+// const productID = document.querySelector('.item__sku');
 const cart = document.querySelector('.cart__items');
 const esvaziaCarrinho = document.querySelector('.empty-cart');
 const priceCar = document.querySelector('.total-price');
@@ -77,10 +77,11 @@ esvaziaCarrinho.addEventListener('click', () => {
   saveCartItems(esvazia);
 });
 
-function getSkuFromProductItem(item) {
+/* function getSkuFromProductItem(item) {
   saveCartItems(cart.innerText);
   return item.querySelector('span.item__sku').innerText;
 }
+ */
 // passa os dados da api para serem criados no createProductItemElement
 const promiseProduct = fetchProducts('computador');
 const getProducts = () => {
@@ -89,6 +90,7 @@ const getProducts = () => {
     const name = product.title;
     const image = product.thumbnail;
     items.appendChild(createProductItemElement({ sku, name, image }));
+    return items;
   }));
 };
 getProducts();
